@@ -1,9 +1,13 @@
-import Phaser from 'phaser';
-import config from './config';
-import GameScene from './scenes/Game';
+import Phaser from "phaser";
+import config from "./config";
+import GameScene from "./scenes/Game";
+import { WebSocketClient } from "./websockets";
+
+const wsClient = new WebSocketClient("ws://localhost:8080");
+wsClient.connect();
 
 new Phaser.Game(
   Object.assign(config, {
-    scene: [GameScene]
+    scene: [GameScene],
   })
 );
