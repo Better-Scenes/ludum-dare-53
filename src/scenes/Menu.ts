@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
+import { getSocket } from "../websockets";
 
 import {
   assets,
@@ -25,6 +26,7 @@ export default class MenuScene extends Phaser.Scene {
     });
     this.load.image(assets.BACKDROP, "assets/backdrop_draft.jpg");
     this.load.audio(assets.SOUNDTRACK, "assets/music_draft.mp3");
+    getSocket();
   }
 
   create(input: object) {

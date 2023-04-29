@@ -56,3 +56,12 @@ export class WebSocketClient {
     }
   }
 }
+
+let wsClient: WebSocketClient | null = null;
+export function getSocket(): WebSocketClient {
+  if (!wsClient) {
+    wsClient = new WebSocketClient("ws://localhost:8080");
+    wsClient.connect();
+  }
+  return wsClient;
+}
