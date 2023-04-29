@@ -5,6 +5,11 @@ import GameScene from './scenes/Game';
 import MenuScene from './scenes/Menu';
 import GameOverScene from './scenes/GameOver';
 
+import { WebSocketClient } from "./websockets";
+
+const wsClient = new WebSocketClient("ws://localhost:8080");
+wsClient.connect();
+
 new Phaser.Game(
   Object.assign(config, {
     // scene: [GameScene, MenuScene, GameOverScene],
