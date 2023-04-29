@@ -1,8 +1,8 @@
 import Phaser from "phaser";
 
-export default class GameScene extends Phaser.Scene {
+export default class GameOverScene extends Phaser.Scene {
   constructor() {
-    super("GameScene");
+    super("GameOverScene");
   }
 
   preload() {
@@ -11,7 +11,7 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     const logo = this.add.image(400, 70, "logo");
-    this.add.text(0, 0, "Hello World");
+    this.add.text(0, 0, "GAME OVER");
 
     this.tweens.add({
       targets: logo,
