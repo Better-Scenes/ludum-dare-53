@@ -19,7 +19,7 @@ export function commonPreload(scene: Phaser.Scene) {
     url: UIPlugin,
     sceneKey: "rexUI",
   });
-  scene.load.image(assets.BACKDROP, "assets/backdrop_draft.jpg");
+  scene.load.image(assets.BACKDROP, "assets/stage_800x600.jpg");
   scene.load.audio(assets.SOUNDTRACK, "assets/music_draft.mp3");
   getSocket();
 }
