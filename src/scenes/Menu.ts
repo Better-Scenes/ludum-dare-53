@@ -1,9 +1,10 @@
 import Phaser from "phaser";
-import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
-import { getSocket } from "../websockets";
+// import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
+// import { getSocket } from "../websockets";
 
 import {
   assets,
+  commonPreload,
   //   renderTextAt,
   getScreenHalfWidth,
   //   getScreenHalfHeight,
@@ -19,14 +20,7 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.scenePlugin({
-      key: "rexuiplugin",
-      url: UIPlugin,
-      sceneKey: "rexUI",
-    });
-    this.load.image(assets.BACKDROP, "assets/backdrop_draft.jpg");
-    this.load.audio(assets.SOUNDTRACK, "assets/music_draft.mp3");
-    getSocket();
+    commonPreload(this);
   }
 
   create(input: object) {

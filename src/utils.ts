@@ -1,5 +1,7 @@
 import config from "./config";
 import Phaser from "phaser";
+import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
+import { getSocket } from "./websockets";
 
 export enum assets {
   BACKDROP = "backdrop",
@@ -10,6 +12,17 @@ export const textStyle = {
   fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
   color: "green",
 };
+
+export function commonPreload(scene: Phaser.Scene) {
+  scene.load.scenePlugin({
+    key: "rexuiplugin",
+    url: UIPlugin,
+    sceneKey: "rexUI",
+  });
+  scene.load.image(assets.BACKDROP, "assets/backdrop_draft.jpg");
+  scene.load.audio(assets.SOUNDTRACK, "assets/music_draft.mp3");
+  getSocket();
+}
 
 export function renderTextAt(
   scene: Phaser.Scene,

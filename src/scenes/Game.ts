@@ -1,25 +1,24 @@
 import Phaser from "phaser";
 
+import { assets, commonPreload } from "../utils";
+
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super("GameScene");
   }
 
   preload() {
-    this.load.image("logo", "assets/phaser3-logo.png");
+    commonPreload(this);
   }
 
   create() {
-    const logo = this.add.image(400, 70, "logo");
-    this.add.text(0, 0, "Hello World");
+    this.add.tileSprite(400, 300, 800, 600, assets.BACKDROP);
+    // this.add.text(0, 0, "Hello World");
 
-    this.tweens.add({
-      targets: logo,
-      y: 350,
-      duration: 1500,
-      ease: "Sine.inOut",
-      yoyo: true,
-      repeat: -1,
-    });
+    this.add.ellipse(250, 425, 50, 50, 0xff0000);
+    this.add.rectangle(250, 500, 50, 100, 0xff0000);
+
+    this.add.ellipse(550, 425, 50, 50, 0x00ff00);
+    this.add.rectangle(550, 500, 50, 100, 0x00ff00);
   }
 }
