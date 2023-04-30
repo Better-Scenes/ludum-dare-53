@@ -105,7 +105,7 @@ export default class MenuScene extends Phaser.Scene {
           fontSize: "24px",
         })
         .setInteractive({ useHandCursor: true })
-        .on("pointerdown", () => alert("todo: instructions"))
+        .on("pointerdown", () => this.scene.start("InstructionsScene"))
         .setOrigin(0.5, 0.5),
       offset: 20,
     });
@@ -116,7 +116,7 @@ export default class MenuScene extends Phaser.Scene {
           fontSize: "24px",
         })
         .setInteractive({ useHandCursor: true })
-        .on("pointerdown", () => alert("todo: credits"))
+        .on("pointerdown", () => this.scene.start("CreditsScene"))
         .setOrigin(0.5, 0.5),
       offset: 20,
     });

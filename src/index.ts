@@ -1,14 +1,16 @@
 import Phaser from "phaser";
 import config from "./config";
 
-import GameScene from "./scenes/Game";
 import MenuScene from "./scenes/Menu";
+import CreditsScene from "./scenes/Credits";
+import InstructionsScene from "./scenes/Instructions";
+import GameScene from "./scenes/Game";
 import GameOverScene from "./scenes/GameOver";
 
 new Phaser.Game(
   Object.assign(config, {
-    // scene: [MenuScene, GameScene, GameOverScene],
-    scene: [GameScene, MenuScene, GameOverScene],
-    // scene: [GameOverScene, MenuScene, GameScene],
+    scene: [MenuScene, CreditsScene, InstructionsScene, GameScene, GameOverScene],
+    // scene: [GameScene, CreditsScene, InstructionsScene, MenuScene, GameOverScene],
+    // scene: [GameOverScene, CreditsScene, InstructionsScene, MenuScene, GameScene],
   })
 );
