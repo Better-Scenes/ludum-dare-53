@@ -122,7 +122,11 @@ export default class GameScene extends Phaser.Scene {
       isPlayer: true,
       edited: (result: string) => {
         console.log("User message", result);
-        GameState.newMessage(result);
+        if (GameState.getState().messages.length <= 1) {
+          GameState.newMessage(result);
+        } else {
+          GameState.finalMessage(result);
+        }
       },
     });
     this.renderConversation(conversation);

@@ -51,12 +51,25 @@ class GameStateClass {
 
   public newMessage(message: string) {
     this.game.messages.push(message);
-    //redraw UI because we have a new message
     getSocket().sendMessage(message);
+  }
+
+  // send final message from player to server
+  public finalMessage(message: string) {
+    this.game.messages.push(message);
+    getSocket().endGame(message);
   }
 
   public response(message: ChatCompletionRequestMessage) {
     this.game.messages.push(message);
+    if (this.stateChangeCallback) {
+      this.stateChangeCallback();
+    }
+  }
+
+  //got "FINISHED" message from server so update critic state
+  public endGame(criticMessage: GameCriticism) {
+    this.game.critic = criticMessage;
     if (this.stateChangeCallback) {
       this.stateChangeCallback();
     }
