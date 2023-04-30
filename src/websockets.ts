@@ -102,6 +102,7 @@ export function getSocket(): WebSocketClient {
   if (!wsClient) {
     wsClient = new WebSocketClient("wss://ludum-dare-53-backend.herokuapp.com");
     wsClient.connect();
+    //
   }
   return wsClient;
 }
