@@ -4,6 +4,7 @@ export enum WebsocketEvents {
   CONNECT = "CONNECT", // user is connecting or server is responding with uuid
   NEW_GAME = "NEW_GAME", // when the user is starting a new game
   MESSAGE = "MESSAGE", // message from the user, e.g sending their prompt
+  FINISHED = "FINISHED", // for finishing the game, includes final prompt, or feedback from critic
 }
 export type WebsocketMessage = {
   event: WebsocketEvents;
@@ -33,11 +34,15 @@ export class WebSocketClient {
       const data = JSON.parse(event.data as string) as WebsocketMessage;
       if (data.event === WebsocketEvents.CONNECT) {
         this.uuid = data.data as string;
-        console.log("connected to server: ", this.uuid);
+        console.log("CONNECT from server: ", this.uuid);
       } else if (data.event === WebsocketEvents.NEW_GAME) {
         console.log("new game prompt: ", data.data);
       } else if (data.event === WebsocketEvents.MESSAGE) {
-        console.log("message from server: ", data.data);
+        console.log("MESSAGE from server: ", data.data);
+        const responseMessage: ChatCompletionRequestMessage = data.data;
+        GameState.response(responseMessage);
+      } else if (data.event === WebsocketEvents.FINISHED) {
+        console.log("FINISHED from server: ", data.data);
         const responseMessage: ChatCompletionRequestMessage = data.data;
         GameState.response(responseMessage);
       }
@@ -56,6 +61,19 @@ export class WebSocketClient {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       const newUserMessage: WebsocketMessage = {
         event: WebsocketEvents.MESSAGE,
+        uuid: this.uuid,
+        data: message,
+      };
+      this.socket?.send(JSON.stringify(newUserMessage));
+    } else {
+      console.log("WebSocket is not connected");
+    }
+  }
+
+  public endGame(message: string): void {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      const newUserMessage: WebsocketMessage = {
+        event: WebsocketEvents.FINISHED,
         uuid: this.uuid,
         data: message,
       };
