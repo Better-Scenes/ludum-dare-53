@@ -33,38 +33,13 @@ export default class MenuScene extends Phaser.Scene {
 
     curtainRender(this, input.closeCurtains, input.closeCurtains);
 
-    const COLOR_LIGHT = 0x7b5e57;
-    const COLOR_DARK = 0x260e04;
-    this.rexUI.add
-      .slider({
-        x: 770,
-        y: 593,
-        width: 50,
-        height: 5,
-        orientation: "x",
-        value: this.sound.volume,
-
-        track: this.rexUI.add.roundRectangle(0, 0, 0, 0, 3, COLOR_DARK),
-        thumb: this.rexUI.add.roundRectangle(0, 0, 0, 0, 5, COLOR_LIGHT),
-
-        valuechangeCallback: (value) => {
-          this.sound.setVolume(value);
-        },
-        space: {
-          top: 4,
-          bottom: 4,
-        },
-        input: "drag", // 'drag'|'click'
-      })
-      .layout();
-
     this.sound.add("soundtrack");
     if (isMusicPlaying) {
       this.sound.play("soundtrack", {
         volume: 0.1,
         loop: true,
       });
-      isMusicPlaying = true;
+      isMusicPlaying = false;
     }
 
     this.writeText();

@@ -33,7 +33,7 @@ export function commonPreload(scene: Phaser.Scene) {
   scene.load.image(assets.BACKDROP, "assets/stage_800x600.jpg");
   scene.load.image(assets.LEFT_CURTAIN, "assets/curtain_left_400x600.jpg");
   scene.load.image(assets.RIGHT_CURTAIN, "assets/curtain_right_400x600.jpg");
-  scene.load.audio(assets.SOUNDTRACK, "assets/music_draft.mp3");
+  scene.load.audio(assets.SOUNDTRACK, "assets/music_draft_1.mp3");
   getSocket();
 }
 
@@ -72,6 +72,31 @@ export function curtainRender(scene: Phaser.Scene, curtainsOpen: bool, curtainsT
       ease: "Power2",
     });
   }
+
+  const COLOR_LIGHT = 0x7b5e57;
+  const COLOR_DARK = 0x260e04;
+  scene.rexUI.add
+    .slider({
+      x: 770,
+      y: 593,
+      width: 50,
+      height: 5,
+      orientation: "x",
+      value: scene.sound.volume,
+
+      track: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 3, COLOR_DARK),
+      thumb: scene.rexUI.add.roundRectangle(0, 0, 0, 0, 5, COLOR_LIGHT),
+
+      valuechangeCallback: (value) => {
+        scene.sound.setVolume(value);
+      },
+      space: {
+        top: 4,
+        bottom: 4,
+      },
+      input: "drag", // 'drag'|'click'
+    })
+    .layout();
 }
 
 export function renderTextAt(
