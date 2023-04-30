@@ -12,6 +12,7 @@ type ActorLine = {
 
 export default class GameScene extends Phaser.Scene {
   conversation: ActorLine[] = [];
+  constructedTextItems: [] = [];
 
   constructor() {
     super("GameScene");
@@ -46,17 +47,23 @@ export default class GameScene extends Phaser.Scene {
       .rectangle(400 + PlayerOffset, PlayerHeight + 100, 50, 100, 0x00ff00)
       .setStrokeStyle(2.0, 0x000000);
 
-    this.conversation.toReversed().reduce((accum: number, item: ActorLine) => {
+    this.renderConversation(this.conversation);
+  }
+
+  renderConversation(conversation: ActorLine[]) {
+    this.constructedTextItems.forEach(item => item.destroy());
+    this.constructedTextItems = [];
+    conversation.toReversed().reduce((accum: number, item: ActorLine) => {
       const num_lines_estimate = Math.ceil(item.text.length / 40);
       const buffer = 5;
       const x = item.isPlayer ? 400 - PlayerOffset * 0.2 : 400 + PlayerOffset * 0.2;
       const wid = PlayerOffset * 2.0;
       const hei = num_lines_estimate * 15 + buffer * 2;
-      this.add
+      const rect = this.add
         .rectangle(x, accum - hei * 0.5, wid, hei, 0xffffff)
         .setStrokeStyle(2.0, 0x000000);
 
-      this.rexUI.add.BBCodeText(x - wid * 0.5 + buffer, accum - hei + buffer, item.text, {
+      const txt = this.rexUI.add.BBCodeText(x - wid * 0.5 + buffer, accum - hei + buffer, item.text, {
         fixedWidth: wid - buffer * 2,
         fixedHeight: hei - buffer * 2,
         fontSize: "12px",
@@ -67,7 +74,7 @@ export default class GameScene extends Phaser.Scene {
         },
         maxLines: num_lines_estimate,
       });
-
+      this.constructedTextItems.push(rect, txt);
       return accum - hei - buffer;
     }, PlayerHeight - 10);
   }
