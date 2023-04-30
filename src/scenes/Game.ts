@@ -7,6 +7,7 @@ import {
   curtainRender,
   getScreenHalfWidth,
   textStyle,
+  seatPlacements,
 } from "../utils";
 import GameState, { ChatCompletionRequestMessage } from "../GameState";
 import { TextEdit } from "phaser3-rex-plugins/plugins/textedit.js";
@@ -32,6 +33,14 @@ export default class GameScene extends Phaser.Scene {
   create() {
     // background
     this.add.tileSprite(400, 300, 800, 600, assets.BACKDROP);
+
+    const addAt = (x, y, mult) => {
+      const roll = Math.random();
+      const col = roll > 0.66 ? 0xff0000 : (roll > 0.33 ? 0x00ff00 : 0x0000ff)
+      this.add.rectangle(x, y + 15 * mult, 50 * mult, 30 * mult, col);
+      this.add.ellipse(x, y + -25 * mult, 50 * mult, 50 * mult, col);
+    };
+    seatPlacements.forEach(item => addAt(item.x, item.y, item.mult));
 
     // players
     this.add

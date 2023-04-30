@@ -17,6 +17,7 @@ type MenuInput = {
   closeCurtains?: boolean;
 };
 
+// TODO set this to true for deploy
 let isMusicPlaying = false;
 
 export default class MenuScene extends Phaser.Scene {
