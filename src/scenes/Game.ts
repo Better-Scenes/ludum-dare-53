@@ -53,7 +53,7 @@ export default class GameScene extends Phaser.Scene {
   renderConversation(conversation: ActorLine[]) {
     this.constructedTextItems.forEach(item => item.destroy());
     this.constructedTextItems = [];
-    conversation.toReversed().reduce((accum: number, item: ActorLine) => {
+    conversation.slice(0).reverse().reduce((accum: number, item: ActorLine) => {
       const num_lines_estimate = Math.ceil(item.text.length / 40);
       const buffer = 5;
       const x = item.isPlayer ? 400 - PlayerOffset * 0.2 : 400 + PlayerOffset * 0.2;
