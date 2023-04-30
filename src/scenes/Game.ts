@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import { assets, commonPreload } from "../utils";
+import config from "../config";
+import { assets, gameConstants, commonPreload, textStyle } from "../utils";
 import GameState, { ChatCompletionRequestMessage } from "../GameState";
-import { TextEdit, Edit } from "phaser3-rex-plugins/plugins/textedit.js";
-import BBCodeText from "phaser3-rex-plugins/plugins/bbcodetext.js";
+import { TextEdit } from "phaser3-rex-plugins/plugins/textedit.js";
 
 const PlayerHeight = 400;
 const PlayerOffset = 170;
@@ -25,8 +25,10 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    // background
     this.add.tileSprite(400, 300, 800, 600, assets.BACKDROP);
-
+  
+    // players
     this.add
       .ellipse(400 - PlayerOffset, PlayerHeight + 25, 50, 50, 0xff0000)
       .setStrokeStyle(2.0, 0x000000);
@@ -40,6 +42,44 @@ export default class GameScene extends Phaser.Scene {
     this.add
       .rectangle(400 + PlayerOffset, PlayerHeight + 100, 50, 100, 0x00ff00)
       .setStrokeStyle(2.0, 0x000000);
+
+    // controls
+    this.add.text(config.scale.width - 250, 20, "End Game", {
+          ...textStyle,
+          fontSize: "24px",
+        })
+        .setInteractive({ useHandCursor: true })
+        .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
+
+    // curtains
+    const leftCurtain = this.add.tileSprite(
+      200 - gameConstants.curtainBuffer,
+      300,
+      400,
+      600,
+      assets.LEFT_CURTAIN
+    );
+    const rightCurtain = this.add.tileSprite(
+      600 + gameConstants.curtainBuffer,
+      300,
+      400,
+      600,
+      assets.RIGHT_CURTAIN
+    );
+    this.tweens.add({
+      targets: leftCurtain,
+      x: leftCurtain.x - gameConstants.curtainOpening,
+      duration: gameConstants.curtainTiming,
+      ease: "Linear",
+    });
+    this.tweens.add({
+      targets: rightCurtain,
+      x: rightCurtain.x + gameConstants.curtainOpening,
+      duration: gameConstants.curtainTiming,
+      ease: "Linear",
+    });
+
+    setTimeout(this.respondStateChanged.bind(this), gameConstants.curtainTiming);
 
     /*
     this.renderConversation([
@@ -63,10 +103,8 @@ export default class GameScene extends Phaser.Scene {
     ]);
 */
     GameState.startNewGame(() => {
-      console.log("CALLBACK CALLED");
       this.respondStateChanged();
     });
-    this.respondStateChanged();
   }
 
   respondStateChanged() {
@@ -87,7 +125,6 @@ export default class GameScene extends Phaser.Scene {
         GameState.newMessage(result);
       },
     });
-    console.log(conversation);
     this.renderConversation(conversation);
   }
 
@@ -126,7 +163,7 @@ export default class GameScene extends Phaser.Scene {
           }
         );
         if (item.edited) {
-          const editor = new TextEdit(txt, {
+          new TextEdit(txt, {
             type: "text",
             enterClose: true,
             selectAll: true,

@@ -5,8 +5,16 @@ import { getSocket } from "./websockets";
 
 export enum assets {
   BACKDROP = "backdrop",
+  LEFT_CURTAIN = "left_curtain",
+  RIGHT_CURTAIN = "right_curtain",
   SOUNDTRACK = "soundtrack",
 }
+
+export const gameConstants = {
+  curtainBuffer: 3,
+  curtainOpening: 300,
+  curtainTiming: 1500,
+};
 
 export const textStyle = {
   fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
@@ -21,6 +29,8 @@ export function commonPreload(scene: Phaser.Scene) {
   });
 
   scene.load.image(assets.BACKDROP, "assets/stage_800x600.jpg");
+  scene.load.image(assets.LEFT_CURTAIN, "assets/curtain_left_400x600.jpg");
+  scene.load.image(assets.RIGHT_CURTAIN, "assets/curtain_right_400x600.jpg");
   scene.load.audio(assets.SOUNDTRACK, "assets/music_draft.mp3");
   getSocket();
 }

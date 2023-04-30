@@ -4,6 +4,7 @@ import Phaser from "phaser";
 
 import {
   assets,
+  gameConstants,
   commonPreload,
   //   renderTextAt,
   getScreenHalfWidth,
@@ -11,6 +12,10 @@ import {
   //   getRandomInt,
   textStyle,
 } from "../utils";
+
+type MenuInput = {
+  closeCurtains?: boolean;
+};
 
 let isMusicPlaying = false;
 
@@ -23,8 +28,39 @@ export default class MenuScene extends Phaser.Scene {
     commonPreload(this);
   }
 
-  create(input: object) {
+  create(input: MenuInput) {
     this.add.tileSprite(400, 300, 800, 600, assets.BACKDROP);
+
+    const leftCurtain = this.add.tileSprite(
+      200 -
+        (input.closeCurtains ? gameConstants.curtainOpening : 0) -
+        gameConstants.curtainBuffer,
+      300,
+      400,
+      600,
+      assets.LEFT_CURTAIN
+    );
+    const rightCurtain = this.add.tileSprite(
+      600 + (input.closeCurtains ? gameConstants.curtainOpening : 0) + gameConstants.curtainBuffer,
+      300,
+      400,
+      600,
+      assets.RIGHT_CURTAIN
+    );
+    if (input.closeCurtains) {
+      this.tweens.add({
+        targets: leftCurtain,
+        x: leftCurtain.x + gameConstants.curtainOpening,
+        duration: gameConstants.curtainTiming,
+        ease: "Linear",
+      });
+      this.tweens.add({
+        targets: rightCurtain,
+        x: rightCurtain.x - gameConstants.curtainOpening,
+        duration: gameConstants.curtainTiming,
+        ease: "Linear",
+      });
+    }
 
     const COLOR_LIGHT = 0x7b5e57;
     const COLOR_DARK = 0x260e04;
