@@ -1,3 +1,5 @@
+import GameState, { ChatCompletionRequestMessage, GameData } from "./GameState";
+
 export enum WebsocketEvents {
   CONNECT = "CONNECT", // user is connecting or server is responding with uuid
   NEW_GAME = "NEW_GAME", // when the user is starting a new game
@@ -34,6 +36,10 @@ export class WebSocketClient {
         console.log("connected to server: ", this.uuid);
       } else if (data.event === WebsocketEvents.NEW_GAME) {
         console.log("new game prompt: ", data.data);
+      } else if (data.event === WebsocketEvents.MESSAGE) {
+        console.log("message from server: ", data.data);
+        const responseMessage: ChatCompletionRequestMessage = data.data;
+        GameState.response(responseMessage);
       }
     });
 
@@ -48,22 +54,23 @@ export class WebSocketClient {
 
   public sendMessage(message: string): void {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      const newGameMessage: WebsocketMessage = {
+      const newUserMessage: WebsocketMessage = {
         event: WebsocketEvents.MESSAGE,
         uuid: this.uuid,
-        data: { message },
+        data: message,
       };
-      this.socket?.send(JSON.stringify(newGameMessage));
+      this.socket?.send(JSON.stringify(newUserMessage));
     } else {
       console.log("WebSocket is not connected");
     }
   }
 
-  public startNewGame(): void {
+  public startNewGame(prompt = ""): void {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       const newGameMessage: WebsocketMessage = {
         event: WebsocketEvents.NEW_GAME,
         uuid: this.uuid,
+        data: prompt,
       };
       this.socket?.send(JSON.stringify(newGameMessage));
     } else {

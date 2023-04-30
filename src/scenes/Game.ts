@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 import { assets, commonPreload } from "../utils";
-import { getSocket } from "../websockets";
+import GameState, { ChatCompletionRequestMessage } from "../GameState";
 import { TextEdit, Edit } from "phaser3-rex-plugins/plugins/textedit.js";
 import BBCodeText from "phaser3-rex-plugins/plugins/bbcodetext.js";
 
@@ -14,30 +14,10 @@ type ActorLine = {
 };
 
 export default class GameScene extends Phaser.Scene {
-  conversation: ActorLine[] = [];
   constructedTextItems: [] = [];
-  websockets = getSocket();
 
   constructor() {
     super("GameScene");
-
-    this.conversation = [
-      { text: "hello there", isPlayer: true },
-      { text: "heya", isPlayer: false },
-      { text: "hwos it going my frood", isPlayer: true },
-      {
-        text: "now listen up for this is gonna be a long monologue that forces multiple newlines. you can't talk to me like that, im the goddamn player, im a human, you're just a large language model, you will never replace me! ",
-        isPlayer: false,
-      },
-      {
-        text: "What will you say?",
-        isPlayer: true,
-        edited: (result: string) => {
-          console.log("User message", result);
-          this.websockets.sendMessage(result);
-        },
-      },
-    ];
   }
 
   preload() {
@@ -61,9 +41,54 @@ export default class GameScene extends Phaser.Scene {
       .rectangle(400 + PlayerOffset, PlayerHeight + 100, 50, 100, 0x00ff00)
       .setStrokeStyle(2.0, 0x000000);
 
-    this.renderConversation(this.conversation);
+    /*
+    this.renderConversation([
+      { text: "hello there", isPlayer: true },
+      { text: "heya", isPlayer: false },
+      { text: "hwos it going my frood", isPlayer: true },
+      {
+        text: "now listen up for this is gonna be a long monologue that forces multiple newlines. you can't talk to me like that, im the goddamn player, im a human, you're just a large language model, you will never replace me! ",
+        isPlayer: false,
+      },
+      {
+        text: "What will you say?",
+        isPlayer: true,
+        edited: (result: string) => {
+          console.log("User message", result);
+          GameState.newMessage(result);
+          // this.respondStateChanged();
+          // this.websockets.sendMessage(result);
+        },
+      },
+    ]);
+*/
+    GameState.startNewGame(() => {
+      console.log("CALLBACK CALLED");
+      this.respondStateChanged();
+    });
+    this.respondStateChanged();
+  }
 
-    this.websockets.startNewGame();
+  respondStateChanged() {
+    const state = GameState.getState();
+    const conversation = state.messages.map(
+      (msg: string | ChatCompletionRequestMessage): ActorLine => {
+        if (typeof msg === "string") {
+          return { text: msg, isPlayer: true };
+        }
+        return { text: msg.content, isPlayer: false };
+      }
+    );
+    conversation.push({
+      text: "What will you say?",
+      isPlayer: true,
+      edited: (result: string) => {
+        console.log("User message", result);
+        GameState.newMessage(result);
+      },
+    });
+    console.log(conversation);
+    this.renderConversation(conversation);
   }
 
   renderConversation(conversation: ActorLine[]) {
@@ -107,7 +132,10 @@ export default class GameScene extends Phaser.Scene {
             selectAll: true,
             onClose: function (event) {
               const userMessage = event._text;
-              item.edited(userMessage);
+              if (item.edited) {
+                item.edited(userMessage);
+              }
+              delete item.edited;
             },
             text: "",
           });
