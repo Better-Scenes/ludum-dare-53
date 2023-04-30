@@ -1,6 +1,12 @@
 import Phaser from "phaser";
 import config from "../config";
-import { assets, gameConstants, commonPreload, textStyle } from "../utils";
+import {
+  assets,
+  gameConstants,
+  commonPreload,
+  curtainRender,
+  textStyle,
+} from "../utils";
 import GameState, { ChatCompletionRequestMessage } from "../GameState";
 import { TextEdit } from "phaser3-rex-plugins/plugins/textedit.js";
 
@@ -49,36 +55,10 @@ export default class GameScene extends Phaser.Scene {
           fontSize: "24px",
         })
         .setInteractive({ useHandCursor: true })
-        .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
+        // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
+        .on("pointerdown", () => this.scene.start("GameOverScene"))
 
-    // curtains
-    const leftCurtain = this.add.tileSprite(
-      200 - gameConstants.curtainBuffer,
-      300,
-      400,
-      600,
-      assets.LEFT_CURTAIN
-    );
-    const rightCurtain = this.add.tileSprite(
-      600 + gameConstants.curtainBuffer,
-      300,
-      400,
-      600,
-      assets.RIGHT_CURTAIN
-    );
-    this.tweens.add({
-      targets: leftCurtain,
-      x: leftCurtain.x - gameConstants.curtainOpening,
-      duration: gameConstants.curtainTiming,
-      ease: "Linear",
-    });
-    this.tweens.add({
-      targets: rightCurtain,
-      x: rightCurtain.x + gameConstants.curtainOpening,
-      duration: gameConstants.curtainTiming,
-      ease: "Linear",
-    });
-
+    curtainRender(this, false, true);
     setTimeout(this.respondStateChanged.bind(this), gameConstants.curtainTiming);
 
     /*

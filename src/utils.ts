@@ -35,6 +35,43 @@ export function commonPreload(scene: Phaser.Scene) {
   getSocket();
 }
 
+export function curtainRender(scene: Phaser.Scene, curtainsOpen: bool, curtainsToggle: bool) {
+
+  const leftCurtain = scene.add.tileSprite(
+    200 -
+      (curtainsOpen ? gameConstants.curtainOpening : 0) -
+      gameConstants.curtainBuffer,
+    300,
+    400,
+    600,
+    assets.LEFT_CURTAIN
+  );
+  const rightCurtain = scene.add.tileSprite(
+    600 +
+      (curtainsOpen ? gameConstants.curtainOpening : 0) +
+      gameConstants.curtainBuffer,
+    300,
+    400,
+    600,
+    assets.RIGHT_CURTAIN
+  );
+
+  if (curtainsToggle) {
+    scene.tweens.add({
+      targets: leftCurtain,
+      x: leftCurtain.x + gameConstants.curtainOpening * (curtainsOpen ? 1 : -1),
+      duration: gameConstants.curtainTiming,
+      ease: "Power2",
+    });
+    scene.tweens.add({
+      targets: rightCurtain,
+      x: rightCurtain.x - gameConstants.curtainOpening * (curtainsOpen ? 1 : -1),
+      duration: gameConstants.curtainTiming,
+      ease: "Power2",
+    });
+  }
+}
+
 export function renderTextAt(
   scene: Phaser.Scene,
   text: string,
