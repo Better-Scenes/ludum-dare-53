@@ -49,6 +49,10 @@ class GameStateClass {
     return prompt;
   }
 
+  public newGameResponse(prompt: string) {
+    this.game.prompt = prompt;
+  }
+
   public newMessage(message: string) {
     this.game.messages.push(message);
     getSocket().sendMessage(message);

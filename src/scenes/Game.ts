@@ -5,13 +5,11 @@ import {
   gameConstants,
   commonPreload,
   curtainRender,
+  getScreenHalfWidth,
   textStyle,
 } from "../utils";
 import GameState, { ChatCompletionRequestMessage } from "../GameState";
 import { TextEdit } from "phaser3-rex-plugins/plugins/textedit.js";
-
-const PlayerHeight = 400;
-const PlayerOffset = 170;
 
 type ActorLine = {
   text: string;
@@ -21,6 +19,7 @@ type ActorLine = {
 
 export default class GameScene extends Phaser.Scene {
   constructedTextItems: [] = [];
+  promptText?: Phaser.GameObjects.Text;
 
   constructor() {
     super("GameScene");
@@ -33,24 +32,97 @@ export default class GameScene extends Phaser.Scene {
   create() {
     // background
     this.add.tileSprite(400, 300, 800, 600, assets.BACKDROP);
-  
+
     // players
     this.add
-      .ellipse(400 - PlayerOffset, PlayerHeight + 25, 50, 50, 0xff0000)
+      .ellipse(
+        getScreenHalfWidth() - gameConstants.playerOffset,
+        gameConstants.playerHeight + 25,
+        50,
+        50,
+        0xff0000
+      )
       .setStrokeStyle(2.0, 0x000000);
     this.add
-      .rectangle(400 - PlayerOffset, PlayerHeight + 100, 50, 100, 0xff0000)
+      .rectangle(
+        getScreenHalfWidth() - gameConstants.playerOffset,
+        gameConstants.playerHeight + 100,
+        50,
+        100,
+        0xff0000
+      )
       .setStrokeStyle(2.0, 0x000000);
 
     this.add
-      .ellipse(400 + PlayerOffset, PlayerHeight + 25, 50, 50, 0x00ff00)
+      .ellipse(
+        getScreenHalfWidth() + gameConstants.playerOffset,
+        gameConstants.playerHeight + 25,
+        50,
+        50,
+        0x00ff00
+      )
       .setStrokeStyle(2.0, 0x000000);
     this.add
-      .rectangle(400 + PlayerOffset, PlayerHeight + 100, 50, 100, 0x00ff00)
+      .rectangle(
+        getScreenHalfWidth() + gameConstants.playerOffset,
+        gameConstants.playerHeight + 100,
+        50,
+        100,
+        0x00ff00
+      )
       .setStrokeStyle(2.0, 0x000000);
+
+    const promptWidth = 350;
+    const promptHeight = 60;
+    const promptY = 40;
+    const promptStrut = 100;
+    this.add
+      .rectangle(
+        getScreenHalfWidth(),
+        promptY,
+        promptWidth,
+        promptHeight,
+        0xffffff
+      )
+      .setStrokeStyle(2.0, 0x202020);
+    this.add.rectangle(
+      getScreenHalfWidth() - promptStrut,
+      0,
+      20,
+      promptY * 0.5,
+      0x202020
+    );
+    this.add.rectangle(
+      getScreenHalfWidth() + promptStrut,
+      0,
+      20,
+      promptY * 0.5,
+      0x202020
+    );
+
+    this.promptText = this.rexUI.add.BBCodeText(
+      config.scale.width * 0.5 + 5,
+      promptY + 5,
+      "...",
+      // "You are a cavewoman, you are trying to explain to your boyfriend that you are pregnant",
+      {
+        fixedWidth: promptWidth - 10,
+        fixedHeight: promptHeight,
+        fontSize: "12px",
+        color: "red",
+        align: "center",
+        wrap: {
+          mode: "word",
+          width: promptWidth - 10,
+        },
+        maxLines: 5,
+      }
+    );
+
+    this.promptText.setOrigin(0.5, 0.5);
 
     // controls
-    this.add.text(config.scale.width - 250, 20, "End Game", {
+    this.add.text(config.scale.width - 220, 20, "End Game", {
           ...textStyle,
           fontSize: "24px",
         })
@@ -89,6 +161,9 @@ export default class GameScene extends Phaser.Scene {
 
   respondStateChanged() {
     const state = GameState.getState();
+    if (this.promptText) {
+      this.promptText.text = state.prompt || "";
+    }
     const conversation = state.messages.map(
       (msg: string | ChatCompletionRequestMessage): ActorLine => {
         if (typeof msg === "string") {
@@ -122,9 +197,9 @@ export default class GameScene extends Phaser.Scene {
         const num_lines_estimate = Math.ceil(item.text.length / 40);
         const buffer = 5;
         const x = item.isPlayer
-          ? 400 - PlayerOffset * 0.2
-          : 400 + PlayerOffset * 0.2;
-        const wid = PlayerOffset * 2.0;
+          ? 400 - gameConstants.playerOffset * 0.2
+          : 400 + gameConstants.playerOffset * 0.2;
+        const wid = gameConstants.playerOffset * 2.0;
         const hei = num_lines_estimate * 15 + buffer * 2;
         const rect = this.add
           .rectangle(x, accum - hei * 0.5, wid, hei, 0xffffff)
@@ -164,6 +239,6 @@ export default class GameScene extends Phaser.Scene {
 
         this.constructedTextItems.push(rect, txt);
         return accum - hei - buffer;
-      }, PlayerHeight - 10);
+      }, gameConstants.playerHeight - 10);
   }
 }

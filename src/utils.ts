@@ -13,7 +13,9 @@ export enum assets {
 export const gameConstants = {
   curtainBuffer: 3,
   curtainOpening: 300,
-  curtainTiming: 1500,
+  curtainTiming: 150,
+  playerHeight: 420,
+  playerOffset: 170,
 };
 
 export const textStyle = {

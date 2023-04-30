@@ -36,7 +36,7 @@ export class WebSocketClient {
         this.uuid = data.data as string;
         console.log("CONNECT from server: ", this.uuid);
       } else if (data.event === WebsocketEvents.NEW_GAME) {
-        console.log("new game prompt: ", data.data);
+        GameState.newGameResponse(data.data);
       } else if (data.event === WebsocketEvents.MESSAGE) {
         console.log("MESSAGE from server: ", data.data);
         const responseMessage: ChatCompletionRequestMessage = data.data;
