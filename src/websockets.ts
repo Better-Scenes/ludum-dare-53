@@ -20,8 +20,10 @@ export class WebSocketClient {
 
     this.socket.addEventListener("open", (event) => {
       console.log("WebSocket connection opened:", event);
-      // You can send a message to the server after the connection is established
-      this.sendMessage(JSON.stringify({ event: WebsocketEvents.CONNECT }));
+      const newConnectionMessage: WebsocketMessage = {
+        event: WebsocketEvents.CONNECT,
+      };
+      this.socket?.send(JSON.stringify(newConnectionMessage));
     });
 
     this.socket.addEventListener("message", (event) => {
@@ -29,11 +31,7 @@ export class WebSocketClient {
       const data = JSON.parse(event.data as string) as WebsocketMessage;
       if (data.event === WebsocketEvents.CONNECT) {
         this.uuid = data.data as string;
-        const newGameMessage: WebsocketMessage = {
-          event: WebsocketEvents.NEW_GAME,
-          uuid: this.uuid,
-        };
-        this.socket?.send(JSON.stringify(newGameMessage));
+        console.log("connected to server: ", this.uuid);
       } else if (data.event === WebsocketEvents.NEW_GAME) {
         console.log("new game prompt: ", data.data);
       }
@@ -50,7 +48,24 @@ export class WebSocketClient {
 
   public sendMessage(message: string): void {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(message);
+      const newGameMessage: WebsocketMessage = {
+        event: WebsocketEvents.MESSAGE,
+        uuid: this.uuid,
+        data: { message },
+      };
+      this.socket?.send(JSON.stringify(newGameMessage));
+    } else {
+      console.log("WebSocket is not connected");
+    }
+  }
+
+  public startNewGame(): void {
+    if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+      const newGameMessage: WebsocketMessage = {
+        event: WebsocketEvents.NEW_GAME,
+        uuid: this.uuid,
+      };
+      this.socket?.send(JSON.stringify(newGameMessage));
     } else {
       console.log("WebSocket is not connected");
     }
