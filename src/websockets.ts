@@ -39,13 +39,18 @@ export type CrowdResponse = {
 export class WebSocketClient {
   private socket: WebSocket | null = null;
   private uuid = "";
+  private reconnectInterval: number;
+  private reconnectTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(private url: string) {}
+  constructor(private url: string, reconnectInterval = 5000) {
+    this.reconnectInterval = reconnectInterval;
+  }
 
   public connect(): void {
     this.socket = new WebSocket(this.url);
 
     this.socket.addEventListener("open", (event) => {
+      this.clearReconnectTimeout();
       console.log("WebSocket connection opened:", event);
       const newConnectionMessage: WebsocketMessage = {
         event: WebsocketEvents.CONNECT,
@@ -89,10 +94,12 @@ export class WebSocketClient {
 
     this.socket.addEventListener("close", (event) => {
       console.log("WebSocket connection closed:", event);
+      this.scheduleReconnect();
     });
 
     this.socket.addEventListener("error", (event) => {
       console.log("WebSocket error:", event);
+      this.scheduleReconnect();
     });
   }
 
@@ -132,6 +139,23 @@ export class WebSocketClient {
       this.socket?.send(JSON.stringify(newGameMessage));
     } else {
       console.log("WebSocket is not connected");
+    }
+  }
+
+  private scheduleReconnect(): void {
+    if (!this.reconnectTimeout) {
+      this.reconnectTimeout = setTimeout(() => {
+        console.log("Attempting to reconnect...");
+        this.connect();
+      }, this.reconnectInterval);
+    }
+  }
+
+  private clearReconnectTimeout(): void {
+    if (this.reconnectTimeout) {
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout = null;
+      window.location.reload();
     }
   }
 }
