@@ -220,12 +220,27 @@ export default class GameScene extends Phaser.Scene {
         .on("pointerdown", () => this.scene.start("GameOverScene"));
     }
 
-    this.faces.forEach((face: Phaser.GameObjects.Sprite) => {
-
-      const potential = [assets.FACE_ANGRY, assets.FACE_BORED, assets.FACE_LAUGH, assets.FACE_LOVE];
-    
-      face.setTexture(potential[Math.floor(Math.random() * potential.length)]);
-    });
+    if (state.crowd) {
+      const scores = state.crowd.scores;
+      this.faces.forEach((face: Phaser.GameObjects.Sprite) => {
+        const weights = [
+          { face: assets.FACE_ANGRY, w: (10 - scores.relevance) },
+          { face: assets.FACE_BORED, w: (10 - scores.humor) },
+          { face: assets.FACE_LAUGH, w: scores.humor },
+          { face: assets.FACE_LOVE, w: Math.max(0, scores.humor + scores.relevance - 4) },
+        ];
+        const total = weights.reduce((sum: number, item) => {
+          return item.w + sum;
+        }, 0);
+        let roll = total * Math.random();
+        const selected = weights.find((item) => {
+          const chosen = roll < item.w;
+          roll -= item.w;
+          return chosen;
+        });
+        face.setTexture(selected?.face || assets.FACE_BORED);
+      });
+    }
 
     if (this.promptText) {
       this.promptText.text = state.prompt || "";
