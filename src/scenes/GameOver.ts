@@ -27,7 +27,9 @@ export default class GameOverScene extends Phaser.Scene {
     // GameState.startNewGame(() => {});
 
     const state = GameState.getState();
-    const criticism: string = state.critic?.feedback || "All our critics died at the same time as print media and there's no one left to review this.";
+    const criticism: string =
+      state.critic?.feedback ||
+      "All our critics died at the same time as print media and there's no one left to review this.";
 
     const newspaperWidth = 500;
     const newspaperHeight = 400;
@@ -62,26 +64,52 @@ export default class GameOverScene extends Phaser.Scene {
     const elements = [rect, text];
 
     const renderScore = (txt: string, score: number, height: number) => {
-      elements.push(this.add.text(newspaperWidth * -0.5, height, txt, {
-        fontSize: "12px",
-        color: 'black',
-      }).setOrigin(0.0, 0.5));
-      let starOffset = newspaperWidth * -0.25;//newspaperWidth - 300;
+      elements.push(
+        this.add
+          .text(newspaperWidth * -0.5, height, txt, {
+            fontSize: "12px",
+            color: "black",
+          })
+          .setOrigin(0.0, 0.5)
+      );
+      let starOffset = newspaperWidth * -0.25; //newspaperWidth - 300;
       const scale = 0.3;
       while (score >= 2) {
-        elements.push(this.add.sprite(starOffset, height, assets.STAR).setScale(scale).setOrigin(0.5));
+        elements.push(
+          this.add
+            .sprite(starOffset, height, assets.STAR)
+            .setScale(scale)
+            .setOrigin(0.5)
+        );
         score -= 2;
         starOffset += 20;
       }
       if (score >= 1) {
-        elements.push(this.add.sprite(starOffset, height, assets.STAR_HALF).setScale(scale).setOrigin(0.5));
+        elements.push(
+          this.add
+            .sprite(starOffset, height, assets.STAR_HALF)
+            .setScale(scale)
+            .setOrigin(0.5)
+        );
       }
     };
     let scoreOffset = 100;
     renderScore("Humor", state.critic?.scores.humor || 0, scoreOffset);
-    renderScore("Originality", state.critic?.scores.originality || 0, scoreOffset += 20);
-    renderScore("Relevance", state.critic?.scores.relevance || 0, scoreOffset += 20);
-    renderScore("Overall", state.critic?.scores.overall || 0, scoreOffset += 20);
+    renderScore(
+      "Originality",
+      state.critic?.scores.originality || 0,
+      (scoreOffset += 20)
+    );
+    renderScore(
+      "Relevance",
+      state.critic?.scores.relevance || 0,
+      (scoreOffset += 20)
+    );
+    renderScore(
+      "Overall",
+      state.critic?.scores.overall || 0,
+      (scoreOffset += 20)
+    );
 
     // const newspaperDelay = 80;
     const newspaperDelay = 800;
@@ -96,14 +124,14 @@ export default class GameOverScene extends Phaser.Scene {
       ease: "Linear",
     });
 
-    const conversation = state.messages.map(
-      (msg: string | ChatCompletionRequestMessage): ActorLine => {
+    const conversation = state.messages
+      .map((msg: string | ChatCompletionRequestMessage): ActorLine => {
         if (typeof msg === "string") {
           return `\t\t\t\tPLAYER\n${msg}\n`;
         }
         return `\t\t\t\tACTOR\n${msg.content}\n`;
-      }
-    ).join("\n");
+      })
+      .join("\n");
 
     const scriptPage = this.add.rectangle(0, 0, 300, 250, 0xf8f8f8);
     const scriptText = this.rexUI.add.BBCodeText(0, 0, conversation, {
@@ -116,13 +144,16 @@ export default class GameOverScene extends Phaser.Scene {
         mode: "word",
         width: 250,
       },
-      maxLines: 10,
+      maxLines: 50,
     });
     scriptText.setOrigin(0.5, 0.5);
 
     // red 250 green 200 blue 0
 
-    const scriptContainer = this.add.container(1000, 600, [scriptPage, scriptText]);
+    const scriptContainer = this.add.container(1000, 600, [
+      scriptPage,
+      scriptText,
+    ]);
     scriptContainer.angle = 5;
 
     this.tweens.add({
@@ -136,22 +167,39 @@ export default class GameOverScene extends Phaser.Scene {
     });
 
     const promptSize = 150;
-    const promptPage = this.add.rectangle(0, 0, promptSize, promptSize, 0xF7CA00);
-    const promptText = this.rexUI.add.BBCodeText(5, 5, state.prompt || '', {
-      fixedWidth: promptSize,
-      fixedHeight: promptSize,
-      fontSize: "12px",
-      color: "black",
-      align: "center",
-      wrap: {
-        mode: "word",
-        width: promptSize - 10,
-      },
-      maxLines: 10,
-    });
+    const promptPage = this.add.rectangle(
+      0,
+      0,
+      promptSize,
+      promptSize,
+      0xf7ca00
+    );
+
+    const promptTextContent = "Their Prompt: " + state.prompt;
+    const promptText = this.rexUI.add.BBCodeText(
+      5,
+      5,
+      promptTextContent || "",
+      {
+        fontFamily: "Helvetica",
+        fixedWidth: promptSize,
+        fixedHeight: promptSize,
+        fontSize: "12px",
+        color: "black",
+        align: "center",
+        wrap: {
+          mode: "word",
+          width: promptSize - 10,
+        },
+        maxLines: 10,
+      }
+    );
     promptText.setOrigin(0.5, 0.5);
 
-    const promptContainer = this.add.container(-500, -100, [promptPage, promptText]);
+    const promptContainer = this.add.container(-500, -100, [
+      promptPage,
+      promptText,
+    ]);
     promptContainer.angle = 2;
 
     this.tweens.add({

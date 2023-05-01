@@ -37,7 +37,7 @@ export default class MenuScene extends Phaser.Scene {
     this.sound.add("soundtrack");
     if (isMusicPlaying) {
       this.sound.play("soundtrack", {
-        volume: 0.1,
+        volume: 0.15,
         loop: true,
       });
       isMusicPlaying = false;
