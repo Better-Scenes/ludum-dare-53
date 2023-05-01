@@ -27,6 +27,10 @@ class GameStateClass {
 
   public startNewGame(stateChangeCallback?: () => void) {
     this.stateChangeCallback = stateChangeCallback;
+    this.game = {
+      prompt: "...",
+      messages: [],
+    };
     getSocket().startNewGame();
     return prompt;
   }
