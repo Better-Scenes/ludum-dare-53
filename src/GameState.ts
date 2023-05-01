@@ -1,4 +1,4 @@
-import { getSocket } from "./websockets";
+import { CriticResponse, CrowdResponse, getSocket } from "./websockets";
 
 export type ChatCompletionRequestMessage = {
   role: string;
@@ -6,20 +6,10 @@ export type ChatCompletionRequestMessage = {
   name?: string;
 };
 
-export type GameCriticism = {
-  scores: {
-    humor: number;
-    originality: number;
-    relevance: number;
-    overall: number;
-  };
-  feedback: string;
-};
-
 export type GameData = {
   prompt?: string;
   messages: (string | ChatCompletionRequestMessage)[];
-  critic?: GameCriticism;
+  critic?: CriticResponse;
 };
 
 class GameStateClass {
@@ -44,16 +34,16 @@ class GameStateClass {
       prompt,
       messages: [],
     };
-    gameData.critic = {
-      scores: {
-        humor: 6,
-        originality: 5,
-        relevance: 8,
-        overall: 6,
-      },
-      feedback:
-        "The Actor stuck to the prompt, but their lines were a bit predictable. A decent effort, but lacked the spark needed to stand out.",
-    };
+    // gameData.critic = {
+    //   scores: {
+    //     humor: 6,
+    //     originality: 5,
+    //     relevance: 8,
+    //     overall: 6,
+    //   },
+    //   feedback:
+    //     "The Actor stuck to the prompt, but their lines were a bit predictable. A decent effort, but lacked the spark needed to stand out.",
+    // };
     this.game = gameData;
     getSocket().startNewGame(prompt);
     return prompt;
@@ -81,8 +71,16 @@ class GameStateClass {
     }
   }
 
+  public crowd(data: CrowdResponse) {
+    console.log("got crowd data: ", data);
+    // this.game.messages.push(message);
+    // if (this.stateChangeCallback) {
+    //   this.stateChangeCallback();
+    // }
+  }
+
   //got "FINISHED" message from server so update critic state
-  public endGame(criticMessage: GameCriticism) {
+  public endGame(criticMessage: CriticResponse) {
     this.game.critic = criticMessage;
     if (this.stateChangeCallback) {
       this.stateChangeCallback();
