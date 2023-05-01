@@ -18,6 +18,8 @@ type ActorLine = {
   edited?: (result: string) => void;
 };
 
+const textFieldPrompt = "What will you say?";
+
 export default class GameScene extends Phaser.Scene {
   constructedTextItems: [] = [];
   faces: Phaser.GameObjects.Sprite[] = [];
@@ -244,7 +246,7 @@ export default class GameScene extends Phaser.Scene {
     );
     if (!lastMessagePlayer) {
       conversation.push({
-        text: "What will you say?",
+        text: textFieldPrompt,
         isPlayer: true,
         edited: (result: string) => {
           console.log("User message", result);
@@ -363,6 +365,9 @@ export default class GameScene extends Phaser.Scene {
             selectAll: true,
             onClose: function (event) {
               const userMessage = event._text;
+              if (userMessage == textFieldPrompt) {
+                return;
+              }
               if (item.edited) {
                 item.edited(userMessage);
               }
