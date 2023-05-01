@@ -8,6 +8,14 @@ export enum assets {
   LEFT_CURTAIN = "left_curtain",
   RIGHT_CURTAIN = "right_curtain",
   SOUNDTRACK = "soundtrack",
+  NEWSPAPER_0 = "newspaper_0",
+  NEWSPAPER_1 = "newspaper_1",
+  NEWSPAPER_2 = "newspaper_2",
+  NEWSPAPER_3 = "newspaper_3",
+  NEWSPAPER_4 = "newspaper_4",
+  NEWSPAPER_5 = "newspaper_5",
+  STAR = "star",
+  STAR_HALF = "star_half",
 }
 
 export const gameConstants = {
