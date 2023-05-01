@@ -42,7 +42,7 @@ class GameStateClass {
       "You are a cavewoman, you are trying to explain to your boyfriend that you are pregnant";
     const gameData: GameData = {
       prompt,
-      messages: [],
+      messages: ["i am the player and I write this thing", { content: "response", role: ""}, "another response!"],
     };
     gameData.critic = {
       scores: {

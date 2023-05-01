@@ -83,14 +83,85 @@ export default class GameOverScene extends Phaser.Scene {
     renderScore("Relevance", state.critic?.scores.relevance || 0, scoreOffset += 20);
     renderScore("Overall", state.critic?.scores.overall || 0, scoreOffset += 20);
 
-    const container = this.add.container(400, 300, elements);
-    container.scale = 0.0;
+    // const newspaperDelay = 80;
+    const newspaperDelay = 800;
+
+    const newsContainer = this.add.container(400, 300, elements);
+    newsContainer.scale = 0.0;
     this.tweens.add({
-      targets: container,
+      targets: newsContainer,
       angle: -360 * 4 - 10,
       scale: 1,
-      duration: 800,
+      duration: newspaperDelay,
       ease: "Linear",
+    });
+
+    const conversation = state.messages.map(
+      (msg: string | ChatCompletionRequestMessage): ActorLine => {
+        if (typeof msg === "string") {
+          return `\t\t\t\tPLAYER\n${msg}\n`;
+        }
+        return `\t\t\t\tACTOR\n${msg.content}\n`;
+      }
+    ).join("\n");
+
+    const scriptPage = this.add.rectangle(0, 0, 300, 250, 0xf8f8f8);
+    const scriptText = this.rexUI.add.BBCodeText(0, 0, conversation, {
+      fixedWidth: 250,
+      fixedHeight: 200,
+      fontSize: "12px",
+      color: "black",
+      align: "left",
+      wrap: {
+        mode: "word",
+        width: 250,
+      },
+      maxLines: 10,
+    });
+    scriptText.setOrigin(0.5, 0.5);
+
+    // red 250 green 200 blue 0
+
+    const scriptContainer = this.add.container(1000, 600, [scriptPage, scriptText]);
+    scriptContainer.angle = 5;
+
+    this.tweens.add({
+      targets: scriptContainer,
+      x: 650,
+      y: 450,
+      duration: 200,
+      delay: newspaperDelay,
+      ease: "Linear",
+      loop: false,
+    });
+
+    const promptSize = 150;
+    const promptPage = this.add.rectangle(0, 0, promptSize, promptSize, 0xF7CA00);
+    const promptText = this.rexUI.add.BBCodeText(5, 5, state.prompt || '', {
+      fixedWidth: promptSize,
+      fixedHeight: promptSize,
+      fontSize: "12px",
+      color: "black",
+      align: "center",
+      wrap: {
+        mode: "word",
+        width: promptSize - 10,
+      },
+      maxLines: 10,
+    });
+    promptText.setOrigin(0.5, 0.5);
+
+    const promptContainer = this.add.container(-500, -100, [promptPage, promptText]);
+    promptContainer.angle = 2;
+
+    this.tweens.add({
+      targets: promptContainer,
+      x: 100,
+      y: 100,
+      duration: 200,
+      delay: newspaperDelay,
+      ease: "Linear",
+      loop: false,
     });
 
     // controls
