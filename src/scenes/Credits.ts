@@ -56,7 +56,8 @@ export default class CreditsScene extends Phaser.Scene {
       
       With Special Thanks:
       - Irene and Leif Richards
-      - Tanzih Ahmed`.replace(/[ \t]{2,}/g, "");
+      - Tanzih Ahmed
+      - InfinitySamurai and Elizabeth`.replace(/[ \t]{2,}/g, "");
     const text = this.rexUI.add.BBCodeText(10, 10, instructions, {
       fixedWidth: 400 - 20,
       fixedHeight: 400 - 20,

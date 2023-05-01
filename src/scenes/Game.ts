@@ -203,33 +203,6 @@ export default class GameScene extends Phaser.Scene {
   respondStateChanged() {
     const state = GameState.getState();
 
-    if (state.messages.length >= gameConstants.maxRounds && state.critic) {
-      this.rexUI.add
-        .BBCodeText(
-          config.scale.width / 2 - 90,
-          config.scale.height - 50,
-          "Finish Show",
-          {
-            ...textStyle,
-            fixedWidth: 180,
-            fixedHeight: 40,
-            fontSize: "24px",
-            backgroundColor: "#888",
-            backgroundColor2: "#222",
-            backgroundHorizontalGradient: false,
-            padding: 5,
-            backgroundStrokeColor: "black", // null, css string, or number
-            backgroundStrokeLineWidth: 2,
-            backgroundCornerRadius: -5, // 20
-            halign: "center", // 'left'|'center'|'right'
-            valign: "center", // 'top'|'center'|'bottom'
-          }
-        )
-        .setInteractive({ useHandCursor: true })
-        // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
-        .on("pointerdown", () => this.scene.start("GameOverScene"));
-    }
-
     if (state.crowd) {
       const scores = state.crowd.scores;
       this.faces.forEach((face: Phaser.GameObjects.Sprite) => {
@@ -275,7 +248,8 @@ export default class GameScene extends Phaser.Scene {
         isPlayer: true,
         edited: (result: string) => {
           console.log("User message", result);
-          if (state.messages.length <= gameConstants.maxRounds) {
+          console.log(state.messages.length);
+          if (state.messages.length + 1 < gameConstants.maxRounds) {
             GameState.newMessage(result);
           } else {
             GameState.finalMessage(result);
@@ -284,7 +258,7 @@ export default class GameScene extends Phaser.Scene {
       });
     } else if (
       state.messages.length > 0 &&
-      state.messages.length <= gameConstants.maxRounds
+      state.messages.length < gameConstants.maxRounds
     ) {
       conversation.push({ text: "...", isPlayer: false });
     }
@@ -293,8 +267,64 @@ export default class GameScene extends Phaser.Scene {
   }
 
   renderConversation(conversation: ActorLine[]) {
+    const state = GameState.getState();
     this.constructedTextItems.forEach((item) => item.destroy());
     this.constructedTextItems = [];
+
+    if (state.messages.length >= gameConstants.maxRounds && !state.critic) {
+      const button = this.rexUI.add
+        .BBCodeText(
+          config.scale.width / 2,
+          config.scale.height - 125,
+          "The critic is writing your review",
+          {
+            ...textStyle,
+            fontSize: "20px",
+            backgroundColor: "#888",
+            backgroundColor2: "#222",
+            backgroundHorizontalGradient: false,
+            padding: 5,
+            backgroundCornerRadius: -5, // 20
+            halign: "center", // 'left'|'center'|'right'
+            valign: "center", // 'top'|'center'|'bottom'
+          }
+        )
+        .setInteractive({ useHandCursor: true })
+        .on("pointerdown", () => this.scene.start("GameOverScene"))
+        .setOrigin(0.5, 0.5);
+
+      this.constructedTextItems.push(button);
+    } else if (
+      state.messages.length >= gameConstants.maxRounds &&
+      state.critic
+    ) {
+      const button = this.rexUI.add
+        .BBCodeText(
+          config.scale.width / 2 - 90,
+          config.scale.height - 150,
+          "Show Review",
+          {
+            ...textStyle,
+            fixedWidth: 180,
+            fixedHeight: 40,
+            fontSize: "24px",
+            backgroundColor: "#888",
+            backgroundColor2: "#222",
+            backgroundHorizontalGradient: false,
+            padding: 5,
+            backgroundStrokeColor: "black", // null, css string, or number
+            backgroundStrokeLineWidth: 2,
+            backgroundCornerRadius: -5, // 20
+            halign: "center", // 'left'|'center'|'right'
+            valign: "center", // 'top'|'center'|'bottom'
+          }
+        )
+        .setInteractive({ useHandCursor: true })
+        // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
+        .on("pointerdown", () => this.scene.start("GameOverScene"));
+
+      this.constructedTextItems.push(button);
+    }
     conversation
       .slice(0)
       .reverse()
