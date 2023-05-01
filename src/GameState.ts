@@ -18,6 +18,7 @@ class GameStateClass {
 
   constructor() {
     this.game = { messages: [] };
+    // this.populateDummyData();
   }
 
   public getState(): GameData {
@@ -26,31 +27,37 @@ class GameStateClass {
 
   public startNewGame(stateChangeCallback?: () => void) {
     this.stateChangeCallback = stateChangeCallback;
-
-    //get or generate prompt
-    const prompt =
-      "You are a cavewoman, you are trying to explain to your boyfriend that you are pregnant";
-    const gameData: GameData = {
-      prompt,
-      messages: ["i am the player and I write this thing", { content: "response", role: ""}, "another response!"],
-    };
-    // gameData.critic = {
-    //   scores: {
-    //     humor: 6,
-    //     originality: 5,
-    //     relevance: 8,
-    //     overall: 6,
-    //   },
-    //   feedback:
-    //     "The Actor stuck to the prompt, but their lines were a bit predictable. A decent effort, but lacked the spark needed to stand out.",
-    // };
-    this.game = gameData;
-    getSocket().startNewGame(prompt);
+    getSocket().startNewGame();
     return prompt;
   }
 
   public newGameResponse(prompt: string) {
     this.game.prompt = prompt;
+  }
+
+  public populateDummyData() {
+    //get or generate prompt
+    const prompt =
+      "You are a cavewoman, you are trying to explain to your boyfriend that you are pregnant";
+    const gameData: GameData = {
+      prompt,
+      messages: [
+        "i am the player and I write this thing",
+        { content: "response", role: "" },
+        "another response!",
+      ],
+    };
+    gameData.critic = {
+      scores: {
+        humor: 6,
+        originality: 5,
+        relevance: 8,
+        overall: 6,
+      },
+      feedback:
+        "The Actor stuck to the prompt, but their lines were a bit predictable. A decent effort, but lacked the spark needed to stand out.",
+    };
+    this.game = gameData;
   }
 
   public newMessage(message: string) {
