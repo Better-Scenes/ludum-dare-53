@@ -1,4 +1,8 @@
-import GameState, { ChatCompletionRequestMessage, GameData } from "./GameState";
+import GameState, {
+  ChatCompletionRequestMessage,
+  GameCriticism,
+  GameData,
+} from "./GameState";
 
 export enum WebsocketEvents {
   CONNECT = "CONNECT", // user is connecting or server is responding with uuid
@@ -43,8 +47,8 @@ export class WebSocketClient {
         GameState.response(responseMessage);
       } else if (data.event === WebsocketEvents.FINISHED) {
         console.log("FINISHED from server: ", data.data);
-        const responseMessage: ChatCompletionRequestMessage = data.data;
-        GameState.response(responseMessage);
+        const responseMessage: GameCriticism = data.data;
+        GameState.endGame(responseMessage);
       }
     });
 

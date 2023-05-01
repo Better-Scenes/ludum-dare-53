@@ -44,6 +44,16 @@ class GameStateClass {
       prompt,
       messages: [],
     };
+    gameData.critic = {
+      scores: {
+        humor: 6,
+        originality: 5,
+        relevance: 8,
+        overall: 6,
+      },
+      feedback:
+        "The Actor stuck to the prompt, but their lines were a bit predictable. A decent effort, but lacked the spark needed to stand out.",
+    };
     this.game = gameData;
     getSocket().startNewGame(prompt);
     return prompt;
