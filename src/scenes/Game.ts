@@ -291,8 +291,6 @@ export default class GameScene extends Phaser.Scene {
             valign: "center", // 'top'|'center'|'bottom'
           }
         )
-        .setInteractive({ useHandCursor: true })
-        .on("pointerdown", () => this.scene.start("GameOverScene"))
         .setOrigin(0.5, 0.5);
 
       this.constructedTextItems.push(button);
