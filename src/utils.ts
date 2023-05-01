@@ -46,7 +46,7 @@ export function commonPreload(scene: Phaser.Scene) {
   scene.load.image(assets.BACKDROP, "assets/stage_800x600.jpg");
   scene.load.image(assets.LEFT_CURTAIN, "assets/curtain_left_400x600.jpg");
   scene.load.image(assets.RIGHT_CURTAIN, "assets/curtain_right_400x600.jpg");
-  scene.load.audio(assets.SOUNDTRACK, "assets/music_draft_1.mp3");
+  scene.load.audio(assets.SOUNDTRACK, "assets/soundtrack.mp3");
 
   scene.load.image(assets.NEWSPAPER_0, "assets/newspaper_1.png");
   scene.load.image(assets.NEWSPAPER_1, "assets/newspaper_2.png");
