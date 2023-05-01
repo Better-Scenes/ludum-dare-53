@@ -73,7 +73,7 @@ export default class InstructionsScene extends Phaser.Scene {
     });
     text.setOrigin(0.5, 0.5);
 
-    const container = this.add.container(400, 300, [rect, text]);
+    this.add.container(400, 300, [rect, text]);
 
     this.rexUI.add
       .BBCodeText(getScreenHalfWidth(), 550, "Back to Menu", {
@@ -90,7 +90,7 @@ export default class InstructionsScene extends Phaser.Scene {
         valign: "center", // 'top'|'center'|'bottom'
       })
       .setInteractive({ useHandCursor: true })
-      .on("pointerdown", () => this.scene.start("MenuScene"))
+      .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: false }))
       .setOrigin(0.5, 0.5);
   }
 }

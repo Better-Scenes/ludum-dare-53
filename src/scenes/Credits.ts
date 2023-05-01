@@ -88,7 +88,7 @@ export default class CreditsScene extends Phaser.Scene {
         valign: "center", // 'top'|'center'|'bottom'
       })
       .setInteractive({ useHandCursor: true })
-      .on("pointerdown", () => this.scene.start("MenuScene"))
+      .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: false }))
       .setOrigin(0.5, 0.5);
   }
 }
