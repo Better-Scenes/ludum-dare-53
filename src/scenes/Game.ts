@@ -36,11 +36,11 @@ export default class GameScene extends Phaser.Scene {
 
     const addAt = (x, y, mult) => {
       const roll = Math.random();
-      const col = roll > 0.66 ? 0xff0000 : (roll > 0.33 ? 0x00ff00 : 0x0000ff)
+      const col = roll > 0.66 ? 0xff0000 : roll > 0.33 ? 0x00ff00 : 0x0000ff;
       this.add.rectangle(x, y + 15 * mult, 50 * mult, 30 * mult, col);
       this.add.ellipse(x, y + -25 * mult, 50 * mult, 50 * mult, col);
     };
-    seatPlacements.forEach(item => addAt(item.x, item.y, item.mult));
+    seatPlacements.forEach((item) => addAt(item.x, item.y, item.mult));
 
     // players
     this.add
@@ -131,16 +131,20 @@ export default class GameScene extends Phaser.Scene {
     this.promptText.setOrigin(0.5, 0.5);
 
     // controls
-    this.add.text(config.scale.width - 220, 20, "End Game", {
-          ...textStyle,
-          fontSize: "24px",
-        })
-        .setInteractive({ useHandCursor: true })
-        // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
-        .on("pointerdown", () => this.scene.start("GameOverScene"))
+    this.add
+      .text(config.scale.width - 220, 20, "End Game", {
+        ...textStyle,
+        fontSize: "24px",
+      })
+      .setInteractive({ useHandCursor: true })
+      // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
+      .on("pointerdown", () => this.scene.start("GameOverScene"));
 
     curtainRender(this, false, true);
-    setTimeout(this.respondStateChanged.bind(this), gameConstants.curtainTiming);
+    setTimeout(
+      this.respondStateChanged.bind(this),
+      gameConstants.curtainTiming
+    );
 
     /*
     this.renderConversation([
@@ -170,6 +174,10 @@ export default class GameScene extends Phaser.Scene {
 
   respondStateChanged() {
     const state = GameState.getState();
+    if (state.critic) {
+      this.scene.start("GameOverScene");
+      return;
+    }
     if (this.promptText) {
       this.promptText.text = state.prompt || "";
     }
@@ -181,12 +189,13 @@ export default class GameScene extends Phaser.Scene {
         return { text: msg.content, isPlayer: false };
       }
     );
+    console.log("conversation", conversation);
     conversation.push({
       text: "What will you say?",
       isPlayer: true,
       edited: (result: string) => {
         console.log("User message", result);
-        if (GameState.getState().messages.length <= 1) {
+        if (state.messages.length <= 1) {
           GameState.newMessage(result);
         } else {
           GameState.finalMessage(result);
