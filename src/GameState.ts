@@ -38,6 +38,9 @@ class GameStateClass {
 
   public newGameResponse(prompt: string) {
     this.game.prompt = prompt;
+    if (this.stateChangeCallback) {
+      setTimeout(this.stateChangeCallback.bind(this), 100);
+    }
   }
 
   public populateDummyData() {

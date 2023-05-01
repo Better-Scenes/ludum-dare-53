@@ -28,7 +28,7 @@ export const gameConstants = {
   curtainTiming: 150,
   playerHeight: 420,
   playerOffset: 170,
-  maxRounds: 3,
+  maxRounds: 1,
 };
 
 export const textStyle = {

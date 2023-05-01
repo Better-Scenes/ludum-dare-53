@@ -40,11 +40,19 @@ export default class GameScene extends Phaser.Scene {
       const cols = [Math.random(), Math.random(), Math.random()];
       const inv_col = 255.0 / Math.max(cols[0], cols[1], cols[2]);
 
-      const col = Phaser.Display.Color.GetColor(cols[0] * inv_col, cols[1] * inv_col, cols[2] * inv_col);
+      const col = Phaser.Display.Color.GetColor(
+        cols[0] * inv_col,
+        cols[1] * inv_col,
+        cols[2] * inv_col
+      );
 
       this.add.rectangle(x, y + 15 * mult, 50 * mult, 30 * mult, col);
       this.add.ellipse(x, y + -25 * mult, 50 * mult, 50 * mult, col);
-      this.faces.push(this.add.sprite(x, y + -25 * mult + 5, assets.FACE_BORED).setScale(mult * 1.5));
+      this.faces.push(
+        this.add
+          .sprite(x, y + -25 * mult + 5, assets.FACE_BORED)
+          .setScale(mult * 1.5)
+      );
     };
     seatPlacements.forEach((item) => addAudienceAt(item.x, item.y, item.mult));
 
@@ -162,7 +170,9 @@ export default class GameScene extends Phaser.Scene {
         }
       )
       .setInteractive({ useHandCursor: true })
-      .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
+      .on("pointerdown", () =>
+        this.scene.start("MenuScene", { closeCurtains: true })
+      );
 
     /*
     this.renderConversation([
@@ -224,10 +234,13 @@ export default class GameScene extends Phaser.Scene {
       const scores = state.crowd.scores;
       this.faces.forEach((face: Phaser.GameObjects.Sprite) => {
         const weights = [
-          { face: assets.FACE_ANGRY, w: (10 - scores.relevance) },
-          { face: assets.FACE_BORED, w: (10 - scores.humor) },
+          { face: assets.FACE_ANGRY, w: 10 - scores.relevance },
+          { face: assets.FACE_BORED, w: 10 - scores.humor },
           { face: assets.FACE_LAUGH, w: scores.humor },
-          { face: assets.FACE_LOVE, w: Math.max(0, scores.humor + scores.relevance - 4) },
+          {
+            face: assets.FACE_LOVE,
+            w: Math.max(0, scores.humor + scores.relevance - 4),
+          },
         ];
         const total = weights.reduce((sum: number, item) => {
           return item.w + sum;
@@ -262,14 +275,17 @@ export default class GameScene extends Phaser.Scene {
         isPlayer: true,
         edited: (result: string) => {
           console.log("User message", result);
-          if (state.messages.length <= 1) {
+          if (state.messages.length <= gameConstants.maxRounds) {
             GameState.newMessage(result);
           } else {
             GameState.finalMessage(result);
           }
         },
       });
-    } else if (state.messages.length > 0 && state.messages.length <= 1) {
+    } else if (
+      state.messages.length > 0 &&
+      state.messages.length <= gameConstants.maxRounds
+    ) {
       conversation.push({ text: "...", isPlayer: false });
     }
     // console.log("conversation", conversation);
