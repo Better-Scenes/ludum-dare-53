@@ -39,7 +39,7 @@ export default class InstructionsScene extends Phaser.Scene {
       })
       .setOrigin(0.5, 0.5);
 
-    const rect = this.add.rectangle(0, 0, 400, 400, 0xffffff);
+    const rect = this.add.rectangle(0, 0, 400, 400, 0xffffff, 0.6);
 
     const instructions =
       `[size=20]You are an improv comedian, it's your first time on the big stage!

@@ -11,10 +11,10 @@ new Phaser.Game(
   Object.assign(config, {
     // scene: [MenuScene, CreditsScene, InstructionsScene, GameScene, GameOverScene],
     scene: [
-      InstructionsScene,
       MenuScene,
-      GameScene,
       CreditsScene,
+      InstructionsScene,
+      GameScene,
       GameOverScene,
     ],
     // scene: [
