@@ -181,27 +181,34 @@ export default class GameScene extends Phaser.Scene {
     if (this.promptText) {
       this.promptText.text = state.prompt || "";
     }
+    let lastMessagePlayer = false;
     const conversation = state.messages.map(
       (msg: string | ChatCompletionRequestMessage): ActorLine => {
         if (typeof msg === "string") {
+          lastMessagePlayer = true;
           return { text: msg, isPlayer: true };
         }
+        lastMessagePlayer = false;
         return { text: msg.content, isPlayer: false };
       }
     );
-    console.log("conversation", conversation);
-    conversation.push({
-      text: "What will you say?",
-      isPlayer: true,
-      edited: (result: string) => {
-        console.log("User message", result);
-        if (state.messages.length <= 1) {
-          GameState.newMessage(result);
-        } else {
-          GameState.finalMessage(result);
-        }
-      },
-    });
+    if (!lastMessagePlayer) {
+      conversation.push({
+        text: "What will you say?",
+        isPlayer: true,
+        edited: (result: string) => {
+          console.log("User message", result);
+          if (state.messages.length <= 1) {
+            GameState.newMessage(result);
+          } else {
+            GameState.finalMessage(result);
+          }
+        },
+      });
+    } else if (state.messages.length > 0 && state.messages.length <= 1) {
+      conversation.push({ text: "...", isPlayer: false });
+    }
+    // console.log("conversation", conversation);
     this.renderConversation(conversation);
   }
 

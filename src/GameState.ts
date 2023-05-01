@@ -67,12 +67,18 @@ class GameStateClass {
   public newMessage(message: string) {
     this.game.messages.push(message);
     getSocket().sendMessage(message);
+    if (this.stateChangeCallback) {
+      setTimeout(this.stateChangeCallback.bind(this), 100);
+    }
   }
 
   // send final message from player to server
   public finalMessage(message: string) {
     this.game.messages.push(message);
     getSocket().endGame(message);
+    if (this.stateChangeCallback) {
+      setTimeout(this.stateChangeCallback.bind(this), 100);
+    }
   }
 
   public response(message: ChatCompletionRequestMessage) {
