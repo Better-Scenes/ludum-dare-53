@@ -205,12 +205,22 @@ export default class GameOverScene extends Phaser.Scene {
     });
 
     // controls
-    this.add
-      .text(config.scale.width - 250, 20, "Return to Menu", {
+    this.rexUI.add
+      .BBCodeText(680, 50, "Back to Menu", {
         ...textStyle,
         fontSize: "24px",
+        backgroundColor: "#888",
+        backgroundColor2: "#222",
+        backgroundHorizontalGradient: false,
+        padding: 8,
+        backgroundStrokeColor: "black", // null, css string, or number
+        backgroundStrokeLineWidth: 2,
+        backgroundCornerRadius: -5, // 20
+        halign: "center", // 'left'|'center'|'right'
+        valign: "center", // 'top'|'center'|'bottom'
       })
       .setInteractive({ useHandCursor: true })
-      .on("pointerdown", () => this.scene.start("MenuScene"));
+      .on("pointerdown", () => this.scene.start("MenuScene"))
+      .setOrigin(0.5, 0.5);
   }
 }

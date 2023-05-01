@@ -1,6 +1,5 @@
 import Phaser from "phaser";
-// import UIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
-// import { getSocket } from "../websockets";
+import config from "../config";
 
 import {
   assets,
@@ -55,19 +54,37 @@ export default class MenuScene extends Phaser.Scene {
   writeText() {
     const textObjects: { text: Phaser.GameObjects.Text; offset: number }[] = [];
     textObjects.push({
-      text: this.add
-        .text(getScreenHalfWidth(), 50, "Stand and Deliver", {
+      text: this.rexUI.add
+        .BBCodeText(getScreenHalfWidth(), 100, "Stand and Deliver", {
           ...textStyle,
-          fontSize: "48px",
+          fontSize: "42px",
+          backgroundColor: "#888",
+          backgroundColor2: "#222",
+          backgroundHorizontalGradient: false,
+          backgroundCornerRadius: -5, // 20
+          halign: "center", // 'left'|'center'|'right'
+          valign: "center", // 'top'|'center'|'bottom'
+          padding: 10,
         })
+        .setInteractive({ useHandCursor: true })
+        .on("pointerdown", () => this.newGame())
         .setOrigin(0.5, 0.5),
       offset: 100,
     });
     textObjects.push({
-      text: this.add
-        .text(getScreenHalfWidth(), 0, "Start Game", {
+      text: this.rexUI.add
+        .BBCodeText(getScreenHalfWidth(), 0, "Start Game", {
           ...textStyle,
           fontSize: "24px",
+          backgroundColor: "#888",
+          backgroundColor2: "#222",
+          backgroundHorizontalGradient: false,
+          padding: 8,
+          backgroundStrokeColor: "black", // null, css string, or number
+          backgroundStrokeLineWidth: 2,
+          backgroundCornerRadius: -5, // 20
+          halign: "center", // 'left'|'center'|'right'
+          valign: "center", // 'top'|'center'|'bottom'
         })
         .setInteractive({ useHandCursor: true })
         .on("pointerdown", () => this.newGame())
@@ -75,10 +92,19 @@ export default class MenuScene extends Phaser.Scene {
       offset: 20,
     });
     textObjects.push({
-      text: this.add
-        .text(getScreenHalfWidth(), 0, "Instructions", {
+      text: this.rexUI.add
+        .BBCodeText(getScreenHalfWidth(), 0, "Instructions", {
           ...textStyle,
           fontSize: "24px",
+          backgroundColor: "#888",
+          backgroundColor2: "#222",
+          backgroundHorizontalGradient: false,
+          padding: 8,
+          backgroundStrokeColor: "black", // null, css string, or number
+          backgroundStrokeLineWidth: 2,
+          backgroundCornerRadius: -5, // 20
+          halign: "center", // 'left'|'center'|'right'
+          valign: "center", // 'top'|'center'|'bottom'
         })
         .setInteractive({ useHandCursor: true })
         .on("pointerdown", () => this.scene.start("InstructionsScene"))
@@ -86,10 +112,19 @@ export default class MenuScene extends Phaser.Scene {
       offset: 20,
     });
     textObjects.push({
-      text: this.add
-        .text(getScreenHalfWidth(), 0, "Credits", {
+      text: this.rexUI.add
+        .BBCodeText(getScreenHalfWidth(), 0, "Credits", {
           ...textStyle,
           fontSize: "24px",
+          backgroundColor: "#888",
+          backgroundColor2: "#222",
+          backgroundHorizontalGradient: false,
+          padding: 8,
+          backgroundStrokeColor: "black", // null, css string, or number
+          backgroundStrokeLineWidth: 2,
+          backgroundCornerRadius: -5, // 20
+          halign: "center", // 'left'|'center'|'right'
+          valign: "center", // 'top'|'center'|'bottom'
         })
         .setInteractive({ useHandCursor: true })
         .on("pointerdown", () => this.scene.start("CreditsScene"))

@@ -24,11 +24,12 @@ export const gameConstants = {
   curtainTiming: 1500,
   playerHeight: 420,
   playerOffset: 170,
+  maxRounds: 3,
 };
 
 export const textStyle = {
   fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
-  color: "green",
+  color: "white",
 };
 
 export function commonPreload(scene: Phaser.Scene) {
@@ -45,8 +46,11 @@ export function commonPreload(scene: Phaser.Scene) {
   getSocket();
 }
 
-export function curtainRender(scene: Phaser.Scene, curtainsOpen: bool, curtainsToggle: bool) {
-
+export function curtainRender(
+  scene: Phaser.Scene,
+  curtainsOpen: bool,
+  curtainsToggle: bool
+) {
   const leftCurtain = scene.add.tileSprite(
     200 -
       (curtainsOpen ? gameConstants.curtainOpening : 0) -
@@ -75,7 +79,8 @@ export function curtainRender(scene: Phaser.Scene, curtainsOpen: bool, curtainsT
     });
     scene.tweens.add({
       targets: rightCurtain,
-      x: rightCurtain.x - gameConstants.curtainOpening * (curtainsOpen ? 1 : -1),
+      x:
+        rightCurtain.x - gameConstants.curtainOpening * (curtainsOpen ? 1 : -1),
       duration: gameConstants.curtainTiming,
       ease: "Power2",
     });

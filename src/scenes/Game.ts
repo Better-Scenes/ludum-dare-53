@@ -31,6 +31,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    const state = GameState.getState();
     // background
     this.add.tileSprite(400, 300, 800, 600, assets.BACKDROP);
 
@@ -127,24 +128,37 @@ export default class GameScene extends Phaser.Scene {
         maxLines: 5,
       }
     );
-
     this.promptText.setOrigin(0.5, 0.5);
 
     // controls
-    this.add
-      .text(config.scale.width - 220, 20, "End Game", {
-        ...textStyle,
-        fontSize: "24px",
-      })
-      .setInteractive({ useHandCursor: true })
-      // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
-      .on("pointerdown", () => this.scene.start("GameOverScene"));
-
     curtainRender(this, false, true);
     setTimeout(
       this.respondStateChanged.bind(this),
       gameConstants.curtainTiming
     );
+
+    this.rexUI.add
+      .BBCodeText(
+        config.scale.width - 130,
+        config.scale.height - 60,
+        "Quit Game",
+        {
+          ...textStyle,
+          fontSize: "24px",
+          backgroundColor: "#888",
+          backgroundColor2: "#222",
+          backgroundHorizontalGradient: false,
+          padding: 5,
+          backgroundStrokeColor: "black", // null, css string, or number
+          backgroundStrokeLineWidth: 2,
+          backgroundCornerRadius: -5, // 20
+          halign: "center", // 'left'|'center'|'right'
+          valign: "center", // 'top'|'center'|'bottom'
+        }
+      )
+      .setInteractive({ useHandCursor: true })
+      // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
+      .on("pointerdown", () => this.scene.start("MenuScene"));
 
     /*
     this.renderConversation([
@@ -174,9 +188,32 @@ export default class GameScene extends Phaser.Scene {
 
   respondStateChanged() {
     const state = GameState.getState();
-    if (state.critic) {
-      this.scene.start("GameOverScene");
-      return;
+
+    if (state.messages.length >= gameConstants.maxRounds && state.critic) {
+      this.rexUI.add
+        .BBCodeText(
+          config.scale.width / 2 - 90,
+          config.scale.height - 50,
+          "Finish Show",
+          {
+            ...textStyle,
+            fixedWidth: 180,
+            fixedHeight: 40,
+            fontSize: "24px",
+            backgroundColor: "#888",
+            backgroundColor2: "#222",
+            backgroundHorizontalGradient: false,
+            padding: 5,
+            backgroundStrokeColor: "black", // null, css string, or number
+            backgroundStrokeLineWidth: 2,
+            backgroundCornerRadius: -5, // 20
+            halign: "center", // 'left'|'center'|'right'
+            valign: "center", // 'top'|'center'|'bottom'
+          }
+        )
+        .setInteractive({ useHandCursor: true })
+        // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
+        .on("pointerdown", () => this.scene.start("GameOverScene"));
     }
     if (this.promptText) {
       this.promptText.text = state.prompt || "";

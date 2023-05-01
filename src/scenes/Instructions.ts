@@ -32,10 +32,17 @@ export default class InstructionsScene extends Phaser.Scene {
   update(time: number, delta: number): void {}
 
   writeText() {
-    this.add
-      .text(getScreenHalfWidth(), 50, "Instructions", {
+    this.rexUI.add
+      .BBCodeText(getScreenHalfWidth(), 50, "Instructions", {
         ...textStyle,
         fontSize: "36px",
+        backgroundColor: "#888",
+        backgroundColor2: "#222",
+        backgroundHorizontalGradient: false,
+        backgroundCornerRadius: -5, // 20
+        halign: "center", // 'left'|'center'|'right'
+        valign: "center", // 'top'|'center'|'bottom'
+        padding: 10,
       })
       .setOrigin(0.5, 0.5);
 
@@ -68,10 +75,19 @@ export default class InstructionsScene extends Phaser.Scene {
 
     const container = this.add.container(400, 300, [rect, text]);
 
-    this.add
-      .text(getScreenHalfWidth(), 550, "Return to Menu", {
+    this.rexUI.add
+      .BBCodeText(getScreenHalfWidth(), 550, "Back to Menu", {
         ...textStyle,
         fontSize: "24px",
+        backgroundColor: "#888",
+        backgroundColor2: "#222",
+        backgroundHorizontalGradient: false,
+        padding: 8,
+        backgroundStrokeColor: "black", // null, css string, or number
+        backgroundStrokeLineWidth: 2,
+        backgroundCornerRadius: -5, // 20
+        halign: "center", // 'left'|'center'|'right'
+        valign: "center", // 'top'|'center'|'bottom'
       })
       .setInteractive({ useHandCursor: true })
       .on("pointerdown", () => this.scene.start("MenuScene"))
