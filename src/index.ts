@@ -12,9 +12,9 @@ new Phaser.Game(
     // scene: [MenuScene, CreditsScene, InstructionsScene, GameScene, GameOverScene],
     scene: [
       MenuScene,
+      GameScene,
       CreditsScene,
       InstructionsScene,
-      GameScene,
       GameOverScene,
     ],
     // scene: [
