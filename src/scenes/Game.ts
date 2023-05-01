@@ -20,6 +20,7 @@ type ActorLine = {
 
 export default class GameScene extends Phaser.Scene {
   constructedTextItems: [] = [];
+  faces: Phaser.GameObjects.Sprite[] = [];
   promptText?: Phaser.GameObjects.Text;
 
   constructor() {
@@ -31,17 +32,21 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    const state = GameState.getState();
     // background
     this.add.tileSprite(400, 300, 800, 600, assets.BACKDROP);
 
-    const addAt = (x, y, mult) => {
-      const roll = Math.random();
-      const col = roll > 0.66 ? 0xff0000 : roll > 0.33 ? 0x00ff00 : 0x0000ff;
+    this.faces = [];
+    const addAudienceAt = (x, y, mult) => {
+      const cols = [Math.random(), Math.random(), Math.random()];
+      const inv_col = 255.0 / Math.max(cols[0], cols[1], cols[2]);
+
+      const col = Phaser.Display.Color.GetColor(cols[0] * inv_col, cols[1] * inv_col, cols[2] * inv_col);
+
       this.add.rectangle(x, y + 15 * mult, 50 * mult, 30 * mult, col);
       this.add.ellipse(x, y + -25 * mult, 50 * mult, 50 * mult, col);
+      this.faces.push(this.add.sprite(x, y + -25 * mult + 5, assets.FACE_BORED).setScale(mult * 1.5));
     };
-    seatPlacements.forEach((item) => addAt(item.x, item.y, item.mult));
+    seatPlacements.forEach((item) => addAudienceAt(item.x, item.y, item.mult));
 
     // players
     this.add
@@ -157,8 +162,7 @@ export default class GameScene extends Phaser.Scene {
         }
       )
       .setInteractive({ useHandCursor: true })
-      // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
-      .on("pointerdown", () => this.scene.start("MenuScene"));
+      .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
 
     /*
     this.renderConversation([
@@ -215,6 +219,14 @@ export default class GameScene extends Phaser.Scene {
         // .on("pointerdown", () => this.scene.start("MenuScene", { closeCurtains: true }))
         .on("pointerdown", () => this.scene.start("GameOverScene"));
     }
+
+    this.faces.forEach((face: Phaser.GameObjects.Sprite) => {
+
+      const potential = [assets.FACE_ANGRY, assets.FACE_BORED, assets.FACE_LAUGH, assets.FACE_LOVE];
+    
+      face.setTexture(potential[Math.floor(Math.random() * potential.length)]);
+    });
+
     if (this.promptText) {
       this.promptText.text = state.prompt || "";
     }

@@ -16,12 +16,16 @@ export enum assets {
   NEWSPAPER_5 = "newspaper_5",
   STAR = "star",
   STAR_HALF = "star_half",
+  FACE_ANGRY = "face_angry",
+  FACE_BORED = "face_bored",
+  FACE_LAUGH = "face_laugh",
+  FACE_LOVE = "face_love",
 }
 
 export const gameConstants = {
   curtainBuffer: 3,
   curtainOpening: 300,
-  curtainTiming: 1500,
+  curtainTiming: 150,
   playerHeight: 420,
   playerOffset: 170,
   maxRounds: 3,
@@ -43,6 +47,21 @@ export function commonPreload(scene: Phaser.Scene) {
   scene.load.image(assets.LEFT_CURTAIN, "assets/curtain_left_400x600.jpg");
   scene.load.image(assets.RIGHT_CURTAIN, "assets/curtain_right_400x600.jpg");
   scene.load.audio(assets.SOUNDTRACK, "assets/music_draft_1.mp3");
+
+  scene.load.image(assets.NEWSPAPER_0, "assets/newspaper_1.png");
+  scene.load.image(assets.NEWSPAPER_1, "assets/newspaper_2.png");
+  scene.load.image(assets.NEWSPAPER_2, "assets/newspaper_3.png");
+  scene.load.image(assets.NEWSPAPER_3, "assets/newspaper_4.png");
+  scene.load.image(assets.NEWSPAPER_4, "assets/newspaper_5.png");
+  scene.load.image(assets.NEWSPAPER_5, "assets/newspaper_6.png");
+  scene.load.image(assets.STAR, "assets/star.png");
+  scene.load.image(assets.STAR_HALF, "assets/star_half.png");
+
+  scene.load.image(assets.FACE_ANGRY, "assets/face_Anger.png");
+  scene.load.image(assets.FACE_BORED, "assets/face_Bored.png");
+  scene.load.image(assets.FACE_LAUGH, "assets/face_Laugh.png");
+  scene.load.image(assets.FACE_LOVE, "assets/face_Love.png");
+
   getSocket();
 }
 

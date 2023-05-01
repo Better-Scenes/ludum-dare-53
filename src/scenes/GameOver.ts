@@ -10,14 +10,6 @@ export default class GameOverScene extends Phaser.Scene {
 
   preload() {
     commonPreload(this);
-    this.load.image(assets.NEWSPAPER_0, "assets/newspaper_1.png");
-    this.load.image(assets.NEWSPAPER_1, "assets/newspaper_2.png");
-    this.load.image(assets.NEWSPAPER_2, "assets/newspaper_3.png");
-    this.load.image(assets.NEWSPAPER_3, "assets/newspaper_4.png");
-    this.load.image(assets.NEWSPAPER_4, "assets/newspaper_5.png");
-    this.load.image(assets.NEWSPAPER_5, "assets/newspaper_6.png");
-    this.load.image(assets.STAR, "assets/star.png");
-    this.load.image(assets.STAR_HALF, "assets/star_half.png");
   }
 
   create() {

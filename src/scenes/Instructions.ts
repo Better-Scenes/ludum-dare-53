@@ -24,7 +24,7 @@ export default class InstructionsScene extends Phaser.Scene {
   create() {
     this.add.tileSprite(400, 300, 800, 600, assets.BACKDROP);
 
-    curtainRender(this, true, false);
+    curtainRender(this, false, false);
 
     this.writeText();
   }
