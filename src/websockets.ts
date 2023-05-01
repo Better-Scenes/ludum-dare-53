@@ -30,6 +30,7 @@ export type CriticResponse = {
 };
 
 export type CrowdResponse = {
+  feedback: string;
   scores: {
     humor: number;
     relevance: number;

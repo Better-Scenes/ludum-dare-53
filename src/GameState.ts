@@ -10,6 +10,7 @@ export type GameData = {
   prompt?: string;
   messages: (string | ChatCompletionRequestMessage)[];
   critic?: CriticResponse;
+  crowd?: CrowdResponse;
 };
 
 class GameStateClass {
@@ -89,11 +90,10 @@ class GameStateClass {
   }
 
   public crowd(data: CrowdResponse) {
-    console.log("got crowd data: ", data);
-    // this.game.messages.push(message);
-    // if (this.stateChangeCallback) {
-    //   this.stateChangeCallback();
-    // }
+    this.game.crowd = data;
+    if (this.stateChangeCallback) {
+      this.stateChangeCallback();
+    }
   }
 
   //got "FINISHED" message from server so update critic state
